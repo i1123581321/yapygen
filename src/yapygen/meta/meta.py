@@ -2,6 +2,8 @@ from typing import Literal, NamedTuple
 
 
 class Meta(NamedTuple):
+    """代表项目元信息的数据类"""
+
     name: str
     description: str
     minimum_python: Literal["3.7", "3.8", "3.9", "3.10"]

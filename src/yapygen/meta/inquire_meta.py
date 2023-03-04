@@ -45,21 +45,22 @@ license = ListPrompt(
 
 author_name = InputPrompt(message="Author name:", default="Author Placeholder")
 
-author_email = InputPrompt(
-    message="Author email:", default="email@placeholder.com"
-)
+author_email = InputPrompt(message="Author email:", default="email@placeholder.com")
 
 package = InputPrompt(
     message="Top level package name:",
     default="demo",
-    validate=lambda x: re.match(
-        r"^([A-Z]|[A-Z][A-Z_]*[A-Z])$", x, re.IGNORECASE
-    )
+    validate=lambda x: re.match(r"^([A-Z]|[A-Z][A-Z_]*[A-Z])$", x, re.IGNORECASE)
     is not None,
 )
 
 
 def get_meta() -> Meta:
+    """通过 InquirerPy 交互式获取项目元信息
+
+    Returns:
+        Meta: 项目元信息
+    """
     return Meta(
         name=name.execute(),
         description=description.execute(),

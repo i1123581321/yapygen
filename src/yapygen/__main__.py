@@ -2,7 +2,7 @@ from yapygen.gen import generate_project
 from yapygen.meta import get_meta
 
 
-def main():
+def main() -> None:
     meta = get_meta()
     generate_project(meta)
 
