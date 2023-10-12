@@ -1,10 +1,10 @@
-from yapygen.gen import generate_project
-from yapygen.meta import get_meta
+from yapygen import generate
+from yapygen.meta import get_info
 
 
 def main() -> None:
-    meta = get_meta()
-    generate_project(meta)
+    info = get_info()
+    generate.main(info)
 
 
 if __name__ == "__main__":

@@ -1,10 +1,55 @@
 import re
+from dataclasses import dataclass, field
+from enum import StrEnum
 
 from InquirerPy.base.control import Choice
 from InquirerPy.prompts.input import InputPrompt
 from InquirerPy.prompts.list import ListPrompt
 
-from yapygen.meta.meta import Meta
+
+class PyVersion(StrEnum):
+    PY38 = "3.8"
+    PY39 = "3.9"
+    PY310 = "3.10"
+    PY311 = "3.11"
+    PY312 = "3.12"
+
+
+class License(StrEnum):
+    NONE = ""
+    MIT = "MIT"
+
+    @property
+    def filename(self) -> str:
+        return "LICENSE"
+
+    @property
+    def name(self) -> str:
+        match self:
+            case License.MIT:
+                return "MIT License"
+            case License.NONE:
+                return "create project without license"
+
+
+@dataclass
+class ProjectInfo:
+    name: str
+    description: str
+    minimum_python: PyVersion
+    license: License
+    author_name: str
+    author_email: str
+    package: str
+    license_str: str = field(init=False)
+
+    def __post_init__(self):
+        self.license_str = (
+            ""
+            if self.license == License.NONE
+            else f'\nlicense = {{ file = "{self.license.filename}" }}'
+        )
+
 
 name = InputPrompt(
     message="Project name:",
@@ -26,21 +71,14 @@ description = InputPrompt(
 )
 
 min_py = ListPrompt(
-    message="minimum python version:",
-    choices=["3.7", "3.8", "3.9", "3.10"],
-    default="3.9",
+    message="Minimum python version:",
+    choices=[version for version in PyVersion],
+    default=PyVersion.PY310,
 )
 
 license = ListPrompt(
-    message="license:",
-    choices=[
-        Choice("MIT", name="MIT License"),
-        Choice("GPLv3", name="GNU GPLv3"),
-        Choice("LGPLv3", name="GNU LGPLv3"),
-        Choice("Mozilla", name="Mozilla Public License 2.0"),
-        Choice("Apache", name="Apache License 2.0"),
-    ],
-    default=Choice("MIT", name="MIT License"),
+    message="License:",
+    choices=[Choice(license, name=license.name) for license in License],
 )
 
 author_name = InputPrompt(message="Author name:", default="Author Placeholder")
@@ -55,13 +93,8 @@ package = InputPrompt(
 )
 
 
-def get_meta() -> Meta:
-    """通过 InquirerPy 交互式获取项目元信息
-
-    Returns:
-        Meta: 项目元信息
-    """
-    return Meta(
+def get_info() -> ProjectInfo:
+    return ProjectInfo(
         name=name.execute(),
         description=description.execute(),
         minimum_python=min_py.execute(),
