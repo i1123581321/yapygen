@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 # from https://peps.python.org/pep-0621/
 [project]
 name = "yapygen"
-version = "0.3.0"
+version = "0.3.1"
 description = "Yet Another Python Project Generator"
 readme = "README.md"
 requires-python = ">=3.9"
